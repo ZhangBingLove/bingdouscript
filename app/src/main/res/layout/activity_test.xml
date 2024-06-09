@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <Button
+        android:id="@+id/test_overlay_window"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="测试悬浮窗"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/test_screen"
+        android:layout_below="@+id/test_overlay_window"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="测试录屏"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/test_accessibility"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/test_screen"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="测试无障碍服务"
+        tools:ignore="HardcodedText" />
+
+
+
+</RelativeLayout>
