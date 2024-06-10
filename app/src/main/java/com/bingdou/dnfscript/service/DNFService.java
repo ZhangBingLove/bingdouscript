@@ -13,11 +13,16 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.bingdou.dnfscript.R;
+import com.bingdou.dnfscript.activity.HomeActivity;
+import com.bingdou.dnfscript.activity.ScreenCaptureActivity;
+import com.bingdou.dnfscript.activity.TestActivity;
+import com.bingdou.dnfscript.activity.TestRecognitionActivity;
 import com.bingdou.dnfscript.tools.Logger;
 
 public class DNFService extends Service {
 
     private static final String TAG = "DNFService";
+
     public DNFService() {
 
     }
@@ -44,7 +49,9 @@ public class DNFService extends Service {
             notificationManager.createNotificationChannel(channel);
         }
         startForeground(1, getNotification());    //启动前台通知
-
+        Intent intent = new Intent(this, ScreenCaptureActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
 
         super.onCreate();
     }

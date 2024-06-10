@@ -1,12 +1,17 @@
 package com.bingdou.dnfscript.tools;
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.GestureDescription;
+import android.graphics.Path;
+import android.nfc.Tag;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
  * 无障碍功能帮助类
  */
 public class AccessibilityHelper {
+
+    private static final String TAG = "AccessibilityHelper";
 
     private AccessibilityHelper() {
     }
@@ -192,13 +197,44 @@ public class AccessibilityHelper {
      * @param y 点击屏幕的 y 坐标
      * @param startTime  滑动开始时间(单位毫秒)
      * @param duration  滑动持续时间(单位毫秒)
-     * @param callback 监听
      * @return
      */
     public boolean performClickByGesture(AccessibilityService service,
                                          float x, float y,
-                                         long startTime, long duration,
-                                         AccessibilityService.GestureResultCallback callback) {
+                                         long startTime, long duration) {
+        Logger.d(TAG, "=====performClickByGesture()====");
+        Logger.d(TAG, "x = " + x + ", y = " + y);
+        if (service != null) {
+            if (startTime < 0) {
+                Logger.d(TAG, "=====滑动开始时间不能小于0====");
+                return false;
+            }
+            if (duration <= 0 || duration > 1000 * 59) {
+                Logger.d(TAG, "=====滑动持续时间需要在0到59秒之间====");
+                return false;
+            }
+            Path path = new Path();
+            path.moveTo(x, y);
+            path.lineTo(x, y);
+
+            GestureDescription.Builder builder = new GestureDescription.Builder();
+            GestureDescription.StrokeDescription strokeDescription = new GestureDescription.StrokeDescription(path, startTime, duration);
+            GestureDescription description = builder.addStroke(strokeDescription).build();
+            return service.dispatchGesture(description, new AccessibilityService.GestureResultCallback(){
+                @Override
+                public void onCompleted(GestureDescription gestureDescription) {
+                    Logger.d(TAG, "=====DefaultGestureResultCallBack====onCompleted()====");
+                    super.onCompleted(gestureDescription);
+                }
+
+                @Override
+                public void onCancelled(GestureDescription gestureDescription) {
+                    Logger.d(TAG, "=====DefaultGestureResultCallBack====onCancelled()====");
+                    super.onCancelled(gestureDescription);
+                }
+
+            }, null);
+        }
         return false;
     }
 
@@ -209,6 +245,23 @@ public class AccessibilityHelper {
      */
     public void waitTime(double miao) {
 
+    }
+
+    private class DefaultGestureResultCallBack extends AccessibilityService.GestureResultCallback {
+
+        @Override
+        public void onCompleted(GestureDescription gestureDescription) {
+            Logger.d(TAG, "=====DefaultGestureResultCallBack====onCompleted()====");
+            super.onCompleted(gestureDescription);
+            Logger.d(TAG, "=====DefaultGestureResultCallBack====onCompleted()22====");
+        }
+
+        @Override
+        public void onCancelled(GestureDescription gestureDescription) {
+            Logger.d(TAG, "=====DefaultGestureResultCallBack====onCancelled()====");
+            super.onCancelled(gestureDescription);
+            Logger.d(TAG, "=====DefaultGestureResultCallBack====onCancelled()22====");
+        }
     }
 
 }

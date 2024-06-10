@@ -1,6 +1,7 @@
 package com.bingdou.dnfscript.tools;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,13 +9,17 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
 
 public class APPUtils {
     public static final String TAG = "APPUtils";
+
+    private static Activity mActivity;
 
     /**
      * DNF包名 com.tencent.tmgp.dnf/.DNFMainActivity
@@ -35,7 +40,7 @@ public class APPUtils {
     public static void startApp(Context context, String packageName, String className) {
 
         PackageManager packageManager = context.getPackageManager();
-        Intent intent= packageManager.getLaunchIntentForPackage("com.tencent.mobileqq");
+        Intent intent = packageManager.getLaunchIntentForPackage("com.tencent.mobileqq");
 //        intent.addCategory(Intent.CATEGORY_LAUNCHER);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -108,11 +113,45 @@ public class APPUtils {
         }
     }
 
+    private boolean startAccessibilitySettings(Context context) {
+        // 判断无障碍功能是否已经开启
+        int accessibilityEnabled = 0;
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(context.getContentResolver(),
+                    Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // 如果无障碍功能未开启，则跳转到无障碍功能设置页面
+        if (accessibilityEnabled != 1) {
+            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            context.startActivity(intent);
+        } else {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 判断应用是否已经运行
      */
     public static void appIsRuning() {
 
+    }
+
+    public static int getWidth() {
+        if (mActivity != null) {
+            return mActivity.getWindowManager().getDefaultDisplay().getWidth();
+        }
+        return 0;
+    }
+
+    public static int getHeight() {
+        if (mActivity != null) {
+            return mActivity.getWindowManager().getDefaultDisplay().getHeight();
+        }
+        return 0;
     }
 
 }

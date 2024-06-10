@@ -15,7 +15,9 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.bingdou.dnfscript.R;
+import com.bingdou.dnfscript.activity.HomeActivity;
 import com.bingdou.dnfscript.activity.TestActivity;
+import com.bingdou.dnfscript.activity.TestRecognitionActivity;
 import com.bingdou.dnfscript.service.DNFService;
 
 /**
@@ -97,6 +99,14 @@ public class FloatWindowManager {
     @SuppressLint("ClickableViewAccessibility")
     private void setListener() {
         if (mFrameLayout != null) {
+
+            mFrameLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mContext.startActivity(new Intent(mContext, HomeActivity.class));
+                }
+            });
+
             mFrameLayout.setOnTouchListener(new View.OnTouchListener() {
                 private int moveX;   //动画平移距离
                 int startX, startY;  //起始点

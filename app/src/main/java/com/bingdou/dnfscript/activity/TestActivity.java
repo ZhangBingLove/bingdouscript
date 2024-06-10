@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,6 +44,9 @@ public class TestActivity extends BaseActivity {
 
         findViewById(R.id.test_accessibility).setOnClickListener(view -> {
             startAccessibilitySettings();
+        });
+        findViewById(R.id.test_coordinate).setOnClickListener(view -> {
+            startActivity(new Intent(TestActivity.this, GetCoordinateActivity.class));
         });
     }
 

@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.bingdou.dnfscript.tools.AccessibilityHelper;
+import com.bingdou.dnfscript.tools.GestureHelper;
 import com.bingdou.dnfscript.tools.Logger;
 
 /**
@@ -41,6 +42,8 @@ public class MyAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Logger.i("====启动Event====");
+//        boolean b = GestureHelper.getInstance().clickByGesture(mService, 20, 180);
+//        Logger.d("zhangbing", "GestureHelper b = " + b);
         //屏幕尺寸
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int x = displayMetrics.widthPixels;

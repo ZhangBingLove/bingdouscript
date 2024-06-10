@@ -23,6 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bingdou.dnfscript.R;
+import com.bingdou.dnfscript.service.FightHelper;
+import com.bingdou.dnfscript.service.MyAccessibilityService;
+import com.bingdou.dnfscript.tools.AccessibilityHelper;
+import com.bingdou.dnfscript.tools.GestureHelper;
 import com.bingdou.dnfscript.tools.HandleControl;
 import com.bingdou.dnfscript.tools.Logger;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,26 +43,40 @@ public class TestRecognitionActivity extends BaseActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private TextView tv_result;
     private ImageView image;
+    private int mCenterX, mCenterY;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recognition);
-        tv_result=findViewById(R.id.tv_result);
-        image=findViewById(R.id.image);
+        tv_result = findViewById(R.id.tv_result);
+        image = findViewById(R.id.image);
         //权限检查
         requestCameraPermission();
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btn=findViewById(R.id.btn);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btn = findViewById(R.id.btn);
         btn.setOnClickListener(view -> {
 //            dispatchTakePictureIntent();//调本地相机
 //                Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_1);
 //                // 在这里使用imageBitmap进行文字识别
 //                recognizeTextFromBitmap(imageBitmap);
-            screenCaptureNoStatusBar();
+//            screenCaptureNoStatusBar();
+            FightHelper.getInstance().judgeIsFight(this);
+//            boolean b = GestureHelper.getInstance().clickByGesture(MyAccessibilityService.mService, mCenterX, mCenterY);
+//            Logger.d("zhangbing", "GestureHelper b = " + b);
         });
 
+//        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btn1 = findViewById(R.id.btn1);
+//        btn1.setOnClickListener(view -> {
+////            boolean b = GestureHelper.getInstance().clickByGesture(MyAccessibilityService.mService, 20, 180);
+////            Logger.d("zhangbing", "GestureHelper b = " + b);
+//        });
+
         tv_result.setOnClickListener(view -> {
-            Toast.makeText(TestRecognitionActivity.this, "haha" ,Toast.LENGTH_SHORT).show();
+            float x = view.getX();
+            float y = view.getY();
+            Logger.d("zhangbing111", "x = " + x + "; y =" + y);
+            Toast.makeText(TestRecognitionActivity.this, "haha2131", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -74,7 +92,7 @@ public class TestRecognitionActivity extends BaseActivity {
         Bitmap imageBitmap = Bitmap.createBitmap(view.getDrawingCache(), 0, 0, w, h);
         // 销毁缓存信息
         view.destroyDrawingCache();
-        recognizeTextFromBitmap(imageBitmap);
+//        recognizeTextFromBitmap(imageBitmap);
     }
 
     private void dispatchTakePictureIntent() {
@@ -123,35 +141,42 @@ public class TestRecognitionActivity extends BaseActivity {
 //                            Logger.d("zhangbing", "blockCornerPoints = " + blockCornerPoints.toString());
                             Rect blockFrame = block.getBoundingBox();
                             Logger.d("zhangbing", "blockFrame = " + blockFrame.toString());
-                            for (Text.Line line : block.getLines()) {
-                                String lineText = line.getText();
-                                Logger.d("zhangbing", "lineText = " + lineText);
-                                Point[] lineCornerPoints = line.getCornerPoints();
-                                Rect lineFrame = line.getBoundingBox();
-                                // 使用Rect的方法直接获取中心坐标
-                                int centerX = lineFrame.centerX();
-                                int centerY = lineFrame.centerY();
-                                if(lineText.equals("拍照")){
-                                    Logger.d("zhangbing", "centerX = " + centerX + "; centerY = " + centerY);
-                                    HandleControl.getInstance().sendPointerSync1(centerX, centerY);
-                                }
-//                                Logger.d("zhangbing", "lineFrame = " + lineFrame.toString());
-                                for (Text.Element element : line.getElements()) {
-                                    String elementText = element.getText();
-//                                    Logger.d("zhangbing", "elementText = " + elementText);
-                                    Point[] elementCornerPoints = element.getCornerPoints();
-                                    Rect elementFrame = element.getBoundingBox();
-                                    for (Text.Symbol symbol : element.getSymbols()) {
-                                        String symbolText = symbol.getText();
-//                                        Logger.d("zhangbing", "symbolText = " + symbolText);
-                                        Point[] symbolCornerPoints = symbol.getCornerPoints();
-                                        for (int i=0; i<symbolCornerPoints.length; i++){
-//                                            Logger.d("zhangbing", "symbolCornerPoints = " + symbolCornerPoints[i].toString());
-                                        }
-                                        Rect symbolFrame = symbol.getBoundingBox();
-                                    }
-                                }
-                            }
+                            int centerX1 = blockFrame.centerX();
+                            int centerY1 = blockFrame.centerY();
+                            Logger.d("zhangbing", "centerX1 = " + centerX1 + "; centerY1 = " + centerY1);
+//                            for (Text.Line line : block.getLines()) {
+//                                String lineText = line.getText();
+//                                Logger.d("zhangbing", "lineText = " + lineText);
+//                                Point[] lineCornerPoints = line.getCornerPoints();
+//                                Rect lineFrame = line.getBoundingBox();
+//                                // 使用Rect的方法直接获取中心坐标
+//                                int centerX = lineFrame.centerX();
+//                                int centerY = lineFrame.centerY();
+//                                if (lineText.equals("拍照")) {
+//                                    mCenterX = centerX;
+//                                    mCenterY = centerY;
+//                                    Logger.d("zhangbing", "centerX = " + centerX + "; centerY = " + centerY);
+////                                    HandleControl.getInstance().sendPointerSync1(centerX, centerY);
+//                                    boolean b = GestureHelper.getInstance().clickByGesture(MyAccessibilityService.mService, centerX, centerY);
+//                                    Logger.d("zhangbing", "GestureHelper b = " + b);
+//                                }
+////                                Logger.d("zhangbing", "lineFrame = " + lineFrame.toString());
+//                                for (Text.Element element : line.getElements()) {
+//                                    String elementText = element.getText();
+////                                    Logger.d("zhangbing", "elementText = " + elementText);
+//                                    Point[] elementCornerPoints = element.getCornerPoints();
+//                                    Rect elementFrame = element.getBoundingBox();
+//                                    for (Text.Symbol symbol : element.getSymbols()) {
+//                                        String symbolText = symbol.getText();
+////                                        Logger.d("zhangbing", "symbolText = " + symbolText);
+//                                        Point[] symbolCornerPoints = symbol.getCornerPoints();
+//                                        for (int i = 0; i < symbolCornerPoints.length; i++) {
+////                                            Logger.d("zhangbing", "symbolCornerPoints = " + symbolCornerPoints[i].toString());
+//                                        }
+//                                        Rect symbolFrame = symbol.getBoundingBox();
+//                                    }
+//                                }
+//                            }
                         }
                         recognizer.close();
                     }
